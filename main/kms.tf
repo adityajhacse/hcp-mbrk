@@ -1,4 +1,5 @@
 resource "aws_kms_key" "example" {
+  name = "kms-test-1"
   description = "KMS key for encrypting data"
   key_usage  = "ENCRYPT_DECRYPT"
   policy = jsonencode({
