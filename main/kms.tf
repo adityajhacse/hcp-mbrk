@@ -16,7 +16,7 @@ resource "aws_kms_key" "example" {
   })
 }
 
-
+ 
 
 
 provider "aws" {
