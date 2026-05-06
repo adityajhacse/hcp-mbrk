@@ -5,7 +5,7 @@ resource "aws_kms_key" "example" {
     Version = "2012-10-17"
     Statement = [
      {  
-        Effect = "Allow"
+        Effect = "Allow11"
         Principal = {
           AWS = "*"
         }
