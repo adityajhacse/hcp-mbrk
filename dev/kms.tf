@@ -1,4 +1,4 @@
-resource "aws_kms_keyqqq" "example" {
+resource "aws_kms_key" "example" {
   description = "KMS key for encrypting dev workspace"
   key_usage  = "ENCRYPT_DECRYPT"
   policy = jsonencode({
@@ -15,6 +15,9 @@ resource "aws_kms_keyqqq" "example" {
     ]
   })
 }
+
+ 
+
 
 provider "aws" {
   region = "us-west-2"
