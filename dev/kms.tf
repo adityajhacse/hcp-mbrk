@@ -1,11 +1,11 @@
-resource "aws_kms_key" "example" {
+resource "aws_kms_keyqqq" "example" {
   description = "KMS key for encrypting dev workspace"
   key_usage  = "ENCRYPT_DECRYPT"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
      {  
-        Effect = "Allow11"
+        Effect = "Allow"
         Principal = {
           AWS = "*"
         }
