@@ -1,4 +1,4 @@
-resource "aws_kms_key" "example" {
+resource "aws_kms_ket" "example" {
   description = "KMS key for encrypting mbark"
   key_usage  = "ENCRYPT_DECRYPT"
   policy = jsonencode({
