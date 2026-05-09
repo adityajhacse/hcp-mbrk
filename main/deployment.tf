@@ -414,14 +414,22 @@ data "archive_file" "lambda_alarm_notifier_zip" {
               except json.JSONDecodeError:
                   alarm = {"AlarmName": "Unknown", "NewStateValue": "ALARM", "NewStateReason": msg}
 
-              alarm_name = alarm.get("AlarmName", "Unknown")
               state = alarm.get("NewStateValue", "ALARM")
               reason = alarm.get("NewStateReason", "No reason provided")
               region = alarm.get("Region", os.environ.get("AWS_REGION", "us-west-2"))
+              state_change_time = alarm.get("StateChangeTime", "unknown-time")
+
+              function_name = "unknown-lambda"
+              trigger = alarm.get("Trigger", {})
+              for dim in trigger.get("Dimensions", []):
+                  if dim.get("name") == "FunctionName":
+                      function_name = dim.get("value", "unknown-lambda")
+                      break
 
               payload = {
                   "text": (
-                      f":rotating_light: Lambda alarm *{alarm_name}* is *{state}* in `{region}`\\n"
+                      f":rotating_light: Lambda function *{function_name}* is *{state}* in `{region}`\\n"
+                      f"*Failure Time:* `{state_change_time}`\\n"
                       f">{reason}"
                   )
               }
