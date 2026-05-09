@@ -140,7 +140,7 @@ resource "aws_security_group" "alb" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-} 
+}
 
 resource "aws_security_group" "ecs" {
   name        = "hello-ecs-sg"
@@ -503,12 +503,13 @@ resource "aws_lambda_permission" "allow_sns_to_invoke_notifier" {
 
 resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
   alarm_name          = "hello-lambda-errors"
-  alarm_description   = "Alarm when hello-lambda has invocation errors"
+  alarm_description   = "Alarm quickly when hello-lambda has invocation errors"
   namespace           = "AWS/Lambda"
   metric_name         = "Errors"
   statistic           = "Sum"
-  period              = 300
+  period              = 60
   evaluation_periods  = 1
+  datapoints_to_alarm = 1
   threshold           = 1
   comparison_operator = "GreaterThanOrEqualToThreshold"
   treat_missing_data  = "notBreaching"
