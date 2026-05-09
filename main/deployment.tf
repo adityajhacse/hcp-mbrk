@@ -351,6 +351,35 @@ resource "aws_lambda_permission" "allow_apigw" {
   source_arn    = "${aws_apigatewayv2_api.public_hello.execution_arn}/*/*"
 }
 
+resource "aws_sns_topic" "lambda_failure_alerts" {
+  name = "lambda-failure-alerts"
+}
+
+resource "aws_sns_topic_subscription" "lambda_failure_email" {
+  topic_arn = aws_sns_topic.lambda_failure_alerts.arn
+  protocol  = "email"
+  endpoint  = "project-channel-ssa-aaaaufd4vuz7igigrmq5pmposi@salesforce-sandbox2.org.slack.com"
+}
+
+resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
+  alarm_name          = "hello-lambda-errors"
+  alarm_description   = "Alarm when hello-lambda has invocation errors"
+  namespace           = "AWS/Lambda"
+  metric_name         = "Errors"
+  statistic           = "Sum"
+  period              = 300
+  evaluation_periods  = 1
+  threshold           = 1
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [aws_sns_topic.lambda_failure_alerts.arn]
+  ok_actions          = [aws_sns_topic.lambda_failure_alerts.arn]
+
+  dimensions = {
+    FunctionName = aws_lambda_function.hello.function_name
+  }
+}
+
 output "kms_key_arn" {
   value = aws_kms_key.hello.arn
 }
@@ -373,4 +402,8 @@ output "lambda_function_name" {
 
 output "public_apigateway_url" {
   value = aws_apigatewayv2_api.public_hello.api_endpoint
+}
+
+output "lambda_failure_sns_topic_arn" {
+  value = aws_sns_topic.lambda_failure_alerts.arn
 }
